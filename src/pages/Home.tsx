@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { clientService } from '../services/clientService';
 
 interface Client {
   id: string;
@@ -29,8 +30,8 @@ export default function Home() {
 
   const handleLogin = () => {
     const cleaned = doc.replace(/\D/g, '');
-    const isValid = documentType === 'CPF' 
-      ? cleaned.length === 11 
+    const isValid = documentType === 'CPF'
+      ? cleaned.length === 11
       : cleaned.length === 14;
 
     if (isValid) {
@@ -48,8 +49,8 @@ export default function Home() {
       }
 
       const cleanedDoc = newClient.documentId.replace(/\D/g, '');
-      const isValidDoc = documentType === 'CPF' 
-        ? cleanedDoc.length === 11 
+      const isValidDoc = documentType === 'CPF'
+        ? cleanedDoc.length === 11
         : cleanedDoc.length === 14;
 
       if (!isValidDoc) {
@@ -57,19 +58,19 @@ export default function Home() {
         return;
       }
 
-      const response = await fetch('http://localhost:3001/clients', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...newClient,
-          documentType,
-          id: `client-${Date.now()}`,
-          balance: newClient.planType === 'prepaid' ? newClient.balance || 0 : undefined,
-          limit: newClient.planType === 'postpaid' ? 100 : undefined
-        }),
-      });
+      const clientData = {
+        ...newClient,
+        documentType,
+        id: `client-${Date.now()}`,
+        balance: newClient.planType === 'prepaid' ? newClient.balance || 0 : undefined,
+        limit: newClient.planType === 'postpaid' ? 100 : undefined
+      };
 
-      if (!response.ok) throw new Error('Erro ao criar conta');
+      const response = await clientService.createClient(clientData);
+
+      if (response.status !== 201) {
+        throw new Error('Erro ao criar conta');
+      }
 
       setShowModal(false);
       setNewClient({
@@ -107,7 +108,7 @@ export default function Home() {
                       checked={documentType === 'CPF'}
                       onChange={() => {
                         setDocumentType('CPF');
-                        setNewClient({...newClient, documentType: 'CPF'});
+                        setNewClient({ ...newClient, documentType: 'CPF' });
                       }}
                       className="mr-2"
                     />
@@ -119,7 +120,7 @@ export default function Home() {
                       checked={documentType === 'CNPJ'}
                       onChange={() => {
                         setDocumentType('CNPJ');
-                        setNewClient({...newClient, documentType: 'CNPJ'});
+                        setNewClient({ ...newClient, documentType: 'CNPJ' });
                       }}
                       className="mr-2"
                     />
@@ -135,7 +136,7 @@ export default function Home() {
                 <input
                   type="text"
                   value={newClient.name}
-                  onChange={(e) => setNewClient({...newClient, name: e.target.value})}
+                  onChange={(e) => setNewClient({ ...newClient, name: e.target.value })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder={documentType === 'CPF' ? 'Seu nome completo' : 'Nome da empresa'}
                 />
@@ -148,7 +149,7 @@ export default function Home() {
                 <input
                   type="text"
                   value={newClient.documentId}
-                  onChange={(e) => setNewClient({...newClient, documentId: e.target.value.replace(/\D/g, '')})}
+                  onChange={(e) => setNewClient({ ...newClient, documentId: e.target.value.replace(/\D/g, '') })}
                   className="w-full p-2 border border-gray-300 rounded-lg"
                   placeholder={`Somente números (${documentType === 'CPF' ? '11' : '14'} dígitos)`}
                 />
@@ -161,7 +162,7 @@ export default function Home() {
                     <input
                       type="radio"
                       checked={newClient.planType === 'prepaid'}
-                      onChange={() => setNewClient({...newClient, planType: 'prepaid'})}
+                      onChange={() => setNewClient({ ...newClient, planType: 'prepaid' })}
                       className="mr-2"
                     />
                     Pré-pago
@@ -170,7 +171,7 @@ export default function Home() {
                     <input
                       type="radio"
                       checked={newClient.planType === 'postpaid'}
-                      onChange={() => setNewClient({...newClient, planType: 'postpaid'})}
+                      onChange={() => setNewClient({ ...newClient, planType: 'postpaid' })}
                       className="mr-2"
                     />
                     Pós-pago
@@ -184,7 +185,7 @@ export default function Home() {
                   <input
                     type="number"
                     value={newClient.balance || 0}
-                    onChange={(e) => setNewClient({...newClient, balance: Number(e.target.value)})}
+                    onChange={(e) => setNewClient({ ...newClient, balance: Number(e.target.value) })}
                     className="w-full p-2 border border-gray-300 rounded-lg"
                     min="0"
                     step="0.01"

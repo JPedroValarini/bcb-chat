@@ -1,7 +1,7 @@
 {
   "clients": [
     {
-      "id": "client-1",
+      "id": "1",
       "name": "Empresa ABC LTDA",
       "documentId": "12345678000199",
       "documentType": "CNPJ",
@@ -44,6 +44,15 @@
       "planType": "postpaid",
       "active": true,
       "limit": 100
+    },
+    {
+      "id": "client-1746824749157",
+      "name": "joao teste axios",
+      "documentId": "09182192101",
+      "documentType": "CPF",
+      "planType": "prepaid",
+      "balance": 90,
+      "active": true
     }
   ],
   "conversations": [
