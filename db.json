@@ -1,0 +1,108 @@
+{
+  "clients": [
+    {
+      "id": "client-1",
+      "name": "Empresa ABC LTDA",
+      "documentId": "12345678000199",
+      "documentType": "CNPJ",
+      "planType": "prepaid",
+      "balance": 75.5,
+      "active": true
+    },
+    {
+      "id": "client-2",
+      "name": "João Silva MEI",
+      "documentId": "98765432100",
+      "documentType": "CPF",
+      "planType": "postpaid",
+      "limit": 100,
+      "active": true
+    },
+    {
+      "id": "client-1746822506978",
+      "name": "joao",
+      "documentId": "15623154784",
+      "documentType": "CPF",
+      "planType": "prepaid",
+      "balance": 50,
+      "active": true
+    },
+    {
+      "id": "client-1746822599382",
+      "name": "joao teste",
+      "documentId": "99908310178",
+      "documentType": "CPF",
+      "planType": "prepaid",
+      "balance": 200,
+      "active": true
+    },
+    {
+      "id": "client-1746822677518",
+      "name": "Empresa 1",
+      "documentId": "11429109000192",
+      "documentType": "CNPJ",
+      "planType": "postpaid",
+      "active": true,
+      "limit": 100
+    }
+  ],
+  "conversations": [
+    {
+      "id": "conv-1",
+      "recipientId": "user-1",
+      "recipientName": "Maria Oliveira",
+      "lastMessageContent": "Olá, gostaria de suporte sobre meu cartão",
+      "lastMessageTime": "2024-01-15T14:30:00Z",
+      "unreadCount": 2
+    },
+    {
+      "id": "conv-2",
+      "recipientId": "user-2",
+      "recipientName": "Carlos Pereira",
+      "lastMessageContent": "URGENTE: Problema na transferência PIX!",
+      "lastMessageTime": "2024-01-15T15:15:00Z",
+      "unreadCount": 0
+    }
+  ],
+  "messages": [
+    {
+      "id": "msg-1",
+      "conversationId": "conv-1",
+      "content": "Bem-vindo ao suporte do Banco Central",
+      "sentBy": {
+        "id": "client-1",
+        "type": "client"
+      },
+      "timestamp": "2024-01-15T14:00:00Z",
+      "priority": "normal",
+      "status": "read",
+      "cost": 0
+    },
+    {
+      "id": "msg-2",
+      "conversationId": "conv-1",
+      "content": "Olá, gostaria de suporte sobre meu cartão",
+      "sentBy": {
+        "id": "user-1",
+        "type": "user"
+      },
+      "timestamp": "2024-01-15T14:30:00Z",
+      "priority": "normal",
+      "status": "delivered",
+      "cost": 0.25
+    },
+    {
+      "id": "msg-3",
+      "conversationId": "conv-2",
+      "content": "URGENTE: Problema na transferência PIX!",
+      "sentBy": {
+        "id": "user-2",
+        "type": "user"
+      },
+      "timestamp": "2024-01-15T15:15:00Z",
+      "priority": "urgent",
+      "status": "sent",
+      "cost": 0.5
+    }
+  ]
+}
