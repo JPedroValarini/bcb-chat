@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import Home from './pages/Home';
 import Conversations from './pages/Conversations';
@@ -16,8 +16,21 @@ type Client = {
 const App: React.FC = () => {
   const [client, setClient] = useState<Client | null>(null);
 
+  useEffect(() => {
+    const storedClient = localStorage.getItem('loggedClient');
+    if (storedClient) {
+      setClient(JSON.parse(storedClient));
+    }
+  }, []);
+
   const handleLogin = (loggedInClient: Client) => {
+    localStorage.setItem('loggedClient', JSON.stringify(loggedInClient));
     setClient(loggedInClient);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedClient');
+    setClient(null);
   };
 
   return (
@@ -37,7 +50,7 @@ const App: React.FC = () => {
           path="/conversations"
           element={
             client ? (
-              <Conversations client={client} />
+              <Conversations client={client} onLogout={handleLogout} />
             ) : (
               <Navigate to="/" replace />
             )

@@ -36,7 +36,12 @@ interface Message {
   status: 'queued' | 'processing' | 'sent' | 'delivered' | 'read' | 'failed';
 }
 
-export default function Conversations({ client }: { client: Client | null }) {
+type ConversationsProps = {
+  client: Client | null;
+  onLogout: () => void;
+};
+
+export default function Conversations({ client, onLogout }: ConversationsProps) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -82,9 +87,12 @@ export default function Conversations({ client }: { client: Client | null }) {
     <div className="max-w-2xl mx-auto my-8 bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
         <h2 className="font-bold text-2xl text-gray-800">Minhas Conversas</h2>
-        <span className="bg-yellow-400 text-gray-900 px-4 py-2 rounded-full text-sm font-semibold shadow-sm">
-          {getBalanceDisplay()}
-        </span>
+        <button
+          onClick={onLogout}
+          className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-sm hover:bg-red-600 transition-colors"
+        >
+          Sair
+        </button>
       </div>
 
       <div className="p-6 border-b border-gray-100">

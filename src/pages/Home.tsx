@@ -35,10 +35,10 @@ export default function Home({ onLogin }: HomeProps) {
   const handleLogin = async () => {
     setError('');
     const cleanedDoc = doc.replace(/\D/g, '');
-    const isValid = documentType === 'CPF' ? cleanedDoc.length === 11 : cleanedDoc.length === 14;
+    const isValid = cleanedDoc.length === 11 || cleanedDoc.length === 14;
 
     if (!isValid) {
-      setError(`Digite um ${documentType} válido (${documentType === 'CPF' ? '11' : '14'} dígitos)`);
+      setError('Digite um CPF ou CNPJ válido.');
       return;
     }
 
@@ -48,7 +48,7 @@ export default function Home({ onLogin }: HomeProps) {
         onLogin(client);
         navigate('/conversations');
       } else {
-        setError('Cliente não encontrado. Verifique o CPF ou CNPJ.');
+        setError('Cliente não encontrado.');
       }
     } catch (err) {
       setError('Erro ao buscar cliente. Tente novamente mais tarde.');
