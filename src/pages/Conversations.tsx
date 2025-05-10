@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import React from 'react';
+import { chatService } from '../services/chatService';
 
 interface Client {
   id: string;
@@ -22,25 +23,36 @@ interface Conversation {
   unreadCount: number;
 }
 
-export default function Conversations() {
+interface Message {
+  id: string;
+  conversationId: string;
+  content: string;
+  sentBy: {
+    id: string;
+    type: 'client' | 'user';
+  };
+  timestamp: string;
+  priority: 'normal' | 'urgent';
+  status: 'queued' | 'processing' | 'sent' | 'delivered' | 'read' | 'failed';
+}
+
+export default function Conversations({ client }: { client: Client | null }) {
   const [conversations, setConversations] = useState<Conversation[]>([]);
-  const [client, setClient] = useState<Client | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
-      try {
-        const clientResponse = await fetch('http://localhost:3001/clients/1');
-        if (!clientResponse.ok) throw new Error('Cliente não encontrado');
-        const clientData = await clientResponse.json();
-        setClient(clientData);
+      if (!client) return;
 
-        const convResponse = await fetch('http://localhost:3001/conversations');
-        if (!convResponse.ok) throw new Error('Erro ao carregar conversas');
-        const convData = await convResponse.json();
-        setConversations(convData);
+      try {
+        const convData = await chatService.fetchConversations();
+
+        const filteredConversations = convData.filter(
+          (conv: Conversation) => conv.recipientId === client.id
+        );
+        setConversations(filteredConversations);
       } catch (err: any) {
         setError(err.message);
       } finally {
@@ -49,7 +61,7 @@ export default function Conversations() {
     };
 
     fetchData();
-  }, []);
+  }, [client]);
 
   const filteredConversations = conversations.filter(conv =>
     conv.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||

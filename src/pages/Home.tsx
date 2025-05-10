@@ -13,7 +13,11 @@ interface Client {
   active: boolean;
 }
 
-export default function Home() {
+interface HomeProps {
+  onLogin: (loggedInClient: Client) => void;
+}
+
+export default function Home({ onLogin }: HomeProps) {
   const [doc, setDoc] = useState('');
   const [error, setError] = useState('');
   const [showModal, setShowModal] = useState(false);
@@ -23,25 +27,36 @@ export default function Home() {
     documentType: 'CPF',
     planType: 'prepaid',
     balance: 0,
-    active: true
+    active: true,
   });
   const [documentType, setDocumentType] = useState<'CPF' | 'CNPJ'>('CPF');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    const cleaned = doc.replace(/\D/g, '');
-    const isValid = documentType === 'CPF'
-      ? cleaned.length === 11
-      : cleaned.length === 14;
+  const handleLogin = async () => {
+    setError('');
+    const cleanedDoc = doc.replace(/\D/g, '');
+    const isValid = documentType === 'CPF' ? cleanedDoc.length === 11 : cleanedDoc.length === 14;
 
-    if (isValid) {
-      navigate('/conversations');
-    } else {
+    if (!isValid) {
       setError(`Digite um ${documentType} válido (${documentType === 'CPF' ? '11' : '14'} dígitos)`);
+      return;
+    }
+
+    try {
+      const client = await clientService.fetchClientByDocumentId(cleanedDoc);
+      if (client) {
+        onLogin(client);
+        navigate('/conversations');
+      } else {
+        setError('Cliente não encontrado. Verifique o CPF ou CNPJ.');
+      }
+    } catch (err) {
+      setError('Erro ao buscar cliente. Tente novamente mais tarde.');
     }
   };
 
   const handleCreateAccount = async () => {
+    setError('');
     try {
       if (!newClient.name) {
         setError('Nome é obrigatório');
@@ -49,9 +64,7 @@ export default function Home() {
       }
 
       const cleanedDoc = newClient.documentId.replace(/\D/g, '');
-      const isValidDoc = documentType === 'CPF'
-        ? cleanedDoc.length === 11
-        : cleanedDoc.length === 14;
+      const isValidDoc = documentType === 'CPF' ? cleanedDoc.length === 11 : cleanedDoc.length === 14;
 
       if (!isValidDoc) {
         setError(`${documentType} inválido (${documentType === 'CPF' ? '11' : '14'} dígitos)`);
@@ -63,7 +76,7 @@ export default function Home() {
         documentType,
         id: `client-${Date.now()}`,
         balance: newClient.planType === 'prepaid' ? newClient.balance || 0 : undefined,
-        limit: newClient.planType === 'postpaid' ? 100 : undefined
+        limit: newClient.planType === 'postpaid' ? 100 : undefined,
       };
 
       const response = await clientService.createClient(clientData);
@@ -79,13 +92,10 @@ export default function Home() {
         documentType: 'CPF',
         planType: 'prepaid',
         balance: 0,
-        active: true
+        active: true,
       });
       setDocumentType('CPF');
       setError('');
-
-      navigate('/');
-
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erro desconhecido');
     }
@@ -154,7 +164,6 @@ export default function Home() {
                   placeholder={`Somente números (${documentType === 'CPF' ? '11' : '14'} dígitos)`}
                 />
               </div>
-
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Tipo de Plano</label>
                 <div className="flex space-x-4">
@@ -193,8 +202,6 @@ export default function Home() {
                 </div>
               )}
 
-              {error && <p className="text-red-500 text-sm">{error}</p>}
-
               <div className="flex space-x-3 pt-2">
                 <button
                   onClick={() => {
@@ -218,50 +225,27 @@ export default function Home() {
       )}
 
       <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md text-center border border-gray-100 transition-all hover:shadow-xl">
-        <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Bem-vindo ao BCB Chat</h1>
-          <p className="text-gray-600">Informe seu CPF ou CNPJ para começar</p>
-        </div>
-
-        <div className="flex justify-center space-x-4 mb-4">
-          <label className="flex items-center">
-            <input
-              type="radio"
-              checked={documentType === 'CPF'}
-              onChange={() => setDocumentType('CPF')}
-              className="mr-2"
-            />
-            Pessoa Física
-          </label>
-          <label className="flex items-center">
-            <input
-              type="radio"
-              checked={documentType === 'CNPJ'}
-              onChange={() => setDocumentType('CNPJ')}
-              className="mr-2"
-            />
-            Pessoa Jurídica
-          </label>
-        </div>
+        <h1 className="text-3xl font-bold text-gray-800 mb-4">Bem-vindo ao BCB Chat</h1>
+        <p className="text-gray-600 mb-6">Informe seu CPF ou CNPJ para começar</p>
 
         <input
           type="text"
           value={doc}
-          onChange={(e) => setDoc(e.target.value.replace(/\D/g, ''))}
-          className="border border-gray-200 rounded-lg px-4 py-3 w-full mb-2 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all placeholder-gray-400"
-          placeholder={`Digite seu ${documentType}`}
+          onChange={(e) => setDoc(e.target.value)}
+          className="border border-gray-200 rounded-lg px-4 py-3 w-full mb-4 focus:outline-none focus:ring-2 focus:ring-yellow-400 focus:border-transparent transition-all placeholder-gray-400"
+          placeholder="Digite seu CPF ou CNPJ"
         />
 
         {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
 
         <button
           onClick={handleLogin}
-          className="bg-yellow-400 text-gray-900 font-bold py-3 px-6 rounded-lg w-full hover:bg-yellow-500 transition-colors shadow-md hover:shadow-lg active:scale-[0.98] mb-3"
+          className="bg-yellow-400 text-gray-900 font-bold py-3 px-6 rounded-lg w-full hover:bg-yellow-500 transition-colors shadow-md hover:shadow-lg active:scale-[0.98]"
         >
           Entrar
         </button>
 
-        <div className="text-center text-sm text-gray-600 mb-3">ou</div>
+        <div className="text-center text-sm text-gray-600 mt-4">ou</div>
 
         <button
           onClick={() => {

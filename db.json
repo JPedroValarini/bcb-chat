@@ -1,117 +1,131 @@
 {
   "clients": [
     {
-      "id": "1",
-      "name": "Empresa ABC LTDA",
-      "documentId": "12345678000199",
-      "documentType": "CNPJ",
-      "planType": "prepaid",
-      "balance": 75.5,
-      "active": true
-    },
-    {
-      "id": "client-2",
-      "name": "João Silva MEI",
-      "documentId": "98765432100",
-      "documentType": "CPF",
-      "planType": "postpaid",
-      "limit": 100,
-      "active": true
-    },
-    {
-      "id": "client-1746822506978",
-      "name": "joao",
-      "documentId": "15623154784",
+      "id": "101",
+      "name": "Maria Silva",
+      "documentId": "12345678900",
       "documentType": "CPF",
       "planType": "prepaid",
       "balance": 50,
       "active": true
     },
     {
-      "id": "client-1746822599382",
-      "name": "joao teste",
-      "documentId": "99908310178",
-      "documentType": "CPF",
-      "planType": "prepaid",
-      "balance": 200,
+      "id": "102",
+      "name": "João Santos",
+      "documentId": "09912899901",
+      "documentType": "CNPJ",
+      "planType": "postpaid",
+      "limit": 200,
       "active": true
     },
     {
-      "id": "client-1746822677518",
-      "name": "Empresa 1",
-      "documentId": "11429109000192",
+      "id": "client-1746901670268",
+      "name": "Joao Empresa",
+      "documentId": "99908310178",
       "documentType": "CNPJ",
-      "planType": "postpaid",
-      "active": true,
-      "limit": 100
-    },
-    {
-      "id": "client-1746824749157",
-      "name": "joao teste axios",
-      "documentId": "09182192101",
-      "documentType": "CPF",
       "planType": "prepaid",
-      "balance": 90,
+      "balance": 250,
       "active": true
     }
   ],
   "conversations": [
     {
-      "id": "conv-1",
-      "recipientId": "user-1",
-      "recipientName": "Maria Oliveira",
-      "lastMessageContent": "Olá, gostaria de suporte sobre meu cartão",
-      "lastMessageTime": "2024-01-15T14:30:00Z",
+      "id": "1",
+      "recipientId": "101",
+      "recipientName": "Maria Silva",
+      "lastMessageContent": "Olá, como posso ajudar?",
+      "lastMessageTime": "2025-05-10T10:00:00Z",
       "unreadCount": 2
     },
     {
-      "id": "conv-2",
-      "recipientId": "user-2",
-      "recipientName": "Carlos Pereira",
-      "lastMessageContent": "URGENTE: Problema na transferência PIX!",
-      "lastMessageTime": "2024-01-15T15:15:00Z",
+      "id": "2",
+      "recipientId": "102",
+      "recipientName": "João Santos",
+      "lastMessageContent": "Obrigado pela ajuda!",
+      "lastMessageTime": "2025-05-10T09:30:00Z",
       "unreadCount": 0
+    },
+    {
+      "id": "3",
+      "recipientId": "101",
+      "recipientName": "Maria Silva",
+      "lastMessageContent": "Você pode me ajudar com a fatura?",
+      "lastMessageTime": "2025-05-10T11:00:00Z",
+      "unreadCount": 1
     }
   ],
   "messages": [
     {
-      "id": "msg-1",
-      "conversationId": "conv-1",
-      "content": "Bem-vindo ao suporte do Banco Central",
+      "id": "1",
+      "conversationId": "1",
+      "content": "Olá, como posso ajudar?",
       "sentBy": {
-        "id": "client-1",
+        "id": "101",
+        "type": "user"
+      },
+      "timestamp": "2025-05-10T10:00:00Z",
+      "priority": "normal",
+      "status": "delivered"
+    },
+    {
+      "id": "2",
+      "conversationId": "1",
+      "content": "Preciso de ajuda com meu plano.",
+      "sentBy": {
+        "id": "101",
         "type": "client"
       },
-      "timestamp": "2024-01-15T14:00:00Z",
-      "priority": "normal",
-      "status": "read",
-      "cost": 0
-    },
-    {
-      "id": "msg-2",
-      "conversationId": "conv-1",
-      "content": "Olá, gostaria de suporte sobre meu cartão",
-      "sentBy": {
-        "id": "user-1",
-        "type": "user"
-      },
-      "timestamp": "2024-01-15T14:30:00Z",
-      "priority": "normal",
-      "status": "delivered",
-      "cost": 0.25
-    },
-    {
-      "id": "msg-3",
-      "conversationId": "conv-2",
-      "content": "URGENTE: Problema na transferência PIX!",
-      "sentBy": {
-        "id": "user-2",
-        "type": "user"
-      },
-      "timestamp": "2024-01-15T15:15:00Z",
+      "timestamp": "2025-05-10T10:01:00Z",
       "priority": "urgent",
+      "status": "read"
+    },
+    {
+      "id": "3",
+      "conversationId": "2",
+      "content": "Obrigado pela ajuda!",
+      "sentBy": {
+        "id": "102",
+        "type": "client"
+      },
+      "timestamp": "2025-05-10T09:30:00Z",
+      "priority": "normal",
+      "status": "delivered"
+    },
+    {
+      "id": "4",
+      "conversationId": "3",
+      "content": "Você pode me ajudar com a fatura?",
+      "sentBy": {
+        "id": "101",
+        "type": "client"
+      },
+      "timestamp": "2025-05-10T11:00:00Z",
+      "priority": "urgent",
+      "status": "queued"
+    },
+    {
+      "id": "5",
+      "conversationId": "3",
+      "content": "Claro, vou verificar isso para você.",
+      "sentBy": {
+        "id": "101",
+        "type": "user"
+      },
+      "timestamp": "2025-05-10T11:05:00Z",
+      "priority": "normal",
+      "status": "processing"
+    },
+    {
+      "id": "3",
+      "content": "teste",
+      "sentBy": {
+        "id": "user-id",
+        "type": "user"
+      },
+      "timestamp": "2025-05-10T20:37:18.799Z",
+      "priority": "normal",
       "status": "sent",
-      "cost": 0.5
+      "conversationId": "3"
     }
   ]
 }
