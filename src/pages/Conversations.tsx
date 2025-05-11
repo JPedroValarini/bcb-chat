@@ -27,9 +27,9 @@ interface Conversation {
 }
 
 type ConversationsProps = {
-  client: Client | null;
-  conversations: Conversation[];
+  client: Client;
   onLogout: () => void;
+  conversations: never[];
 };
 
 export default function Conversations({ client, onLogout }: ConversationsProps) {
@@ -38,23 +38,27 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [updatedClient, setUpdatedClient] = useState<Client | null>(client);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchConversations = async () => {
+    const fetchConversationsAndUpdateClient = async () => {
       if (!client) return;
 
       try {
+        const fetchedClient = await chatService.fetchClientById(client.id);
+        setUpdatedClient(fetchedClient);
+
         const convData = await chatService.fetchConversationsByClientId(client.id);
         setConversations(convData);
       } catch (err: any) {
-        setError('Erro ao carregar conversas. Tente novamente mais tarde.');
+        setError('Erro ao carregar dados. Tente novamente mais tarde.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchConversations();
+    fetchConversationsAndUpdateClient();
   }, [client]);
 
   const clientConversations = conversations.filter((conv) => conv.clientId === client?.id);
@@ -78,10 +82,10 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
   );
 
   const getBalanceDisplay = () => {
-    if (!client) return 'R$ 0,00';
-    return client.planType === 'prepaid'
-      ? `Saldo: R$ ${client.balance?.toFixed(2)}`
-      : `Limite: R$ ${client.limit?.toFixed(2)}`;
+    if (!updatedClient) return 'R$ 0,00';
+    return updatedClient.planType === 'prepaid'
+      ? `Saldo: R$ ${updatedClient.balance?.toFixed(2)}`
+      : `Limite: R$ ${updatedClient.limit?.toFixed(2)}`;
   };
 
   if (loading) return <div className="text-center py-8">Carregando...</div>;
@@ -91,7 +95,7 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
     <div className="max-w-2xl mx-auto my-8 bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-4 sm:p-6 border-b border-gray-200 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 bg-white">
         <h2 className="font-bold text-xl sm:text-2xl text-gray-900 truncate">
-          {client?.name}
+          {updatedClient?.name}
         </h2>
 
         <div className="flex justify-between items-center gap-4 w-full sm:w-auto">

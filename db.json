@@ -6,7 +6,7 @@
       "documentId": "12345678000199",
       "documentType": "CNPJ",
       "planType": "prepaid",
-      "balance": 100,
+      "balance": 99.5,
       "limit": 0,
       "active": true
     },
@@ -17,7 +17,7 @@
       "documentType": "CNPJ",
       "planType": "postpaid",
       "balance": 0,
-      "limit": 500,
+      "limit": 499,
       "active": true
     },
     {
@@ -37,8 +37,8 @@
       "clientId": "client123",
       "recipientId": "user001",
       "recipientName": "Maria Silva",
-      "lastMessageContent": "tudo também !",
-      "lastMessageTime": "2025-05-11T07:07:54.281Z",
+      "lastMessageContent": "teste",
+      "lastMessageTime": "2025-05-11T20:01:42.747Z",
       "unreadCount": 0
     },
     {
@@ -55,8 +55,8 @@
       "clientId": "client456",
       "recipientId": "user003",
       "recipientName": "Ana Costa",
-      "lastMessageContent": "",
-      "lastMessageTime": "",
+      "lastMessageContent": "teste",
+      "lastMessageTime": "2025-05-11T20:03:36.133Z",
       "unreadCount": 0
     },
     {
@@ -64,8 +64,8 @@
       "clientId": "client456",
       "recipientId": "user004",
       "recipientName": "Joao Teste",
-      "lastMessageContent": "primeira mensagem",
-      "lastMessageTime": "2025-05-11T06:56:36.250Z",
+      "lastMessageContent": "teste",
+      "lastMessageTime": "2025-05-11T20:02:00.090Z",
       "unreadCount": 0
     },
     {
@@ -208,6 +208,83 @@
       "priority": "normal",
       "status": "queued",
       "cost": 0.13
+    },
+    {
+      "id": "a1ce",
+      "conversationId": "conv123",
+      "senderId": "client123",
+      "recipientId": "user001",
+      "content": "teste desconto",
+      "timestamp": "2025-05-11T19:40:10.702Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
+    },
+    {
+      "id": "d4c1",
+      "conversationId": "conv123",
+      "senderId": "client123",
+      "recipientId": "user001",
+      "content": "teste",
+      "timestamp": "2025-05-11T19:47:08.497Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
+    },
+    {
+      "id": "69a8",
+      "conversationId": "conv987",
+      "senderId": "client456",
+      "recipientId": "user004",
+      "content": "testa",
+      "timestamp": "2025-05-11T19:47:22.776Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
+    },
+    {
+      "id": "8088",
+      "conversationId": "conv987",
+      "senderId": "client456",
+      "recipientId": "user004",
+      "content": "teste",
+      "timestamp": "2025-05-11T19:47:33.306Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
+    },
+    {
+      "id": "c6cb",
+      "conversationId": "conv123",
+      "senderId": "client123",
+      "recipientId": "user001",
+      "content": "teste",
+      "timestamp": "2025-05-11T20:01:42.747Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
+    },
+    {
+      "id": "4573",
+      "conversationId": "conv987",
+      "senderId": "client456",
+      "recipientId": "user004",
+      "content": "teste",
+      "timestamp": "2025-05-11T20:02:00.090Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
+    },
+    {
+      "id": "c3d6",
+      "conversationId": "conv789",
+      "senderId": "client456",
+      "recipientId": "user003",
+      "content": "teste",
+      "timestamp": "2025-05-11T20:03:36.133Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.25
     }
   ]
 }

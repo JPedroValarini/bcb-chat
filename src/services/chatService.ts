@@ -1,5 +1,6 @@
 const apiConversations = 'http://localhost:3001/conversations';
 const apiMessages = 'http://localhost:3001/messages';
+const apiClients = 'http://localhost:3001/clients';
 
 export const chatService = {
   async fetchConversationsByClientId(clientId: string) {
@@ -12,6 +13,38 @@ export const chatService = {
     } catch (error) {
       console.error('Erro ao buscar conversas:', error);
       throw new Error('Erro ao buscar conversas.');
+    }
+  },
+
+  async updateClient(clientId: string, updates: { balance?: number; limit?: number }) {
+  try {
+    const response = await fetch(`${apiClients}/${clientId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updates),
+    });
+
+    if (!response.ok) {
+      throw new Error('Erro ao atualizar cliente.');
+    }
+
+    return await response.json();
+  } catch (error) {
+    console.error('Erro ao atualizar cliente:', error);
+    throw new Error('Erro ao atualizar cliente.');
+  }
+},
+
+  async fetchClientById(clientId: string) {
+    try {
+      const response = await fetch(`${apiClients}/${clientId}`);
+      if (!response.ok) {
+        throw new Error('Erro ao buscar cliente.');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao buscar cliente:', error);
+      throw new Error('Erro ao buscar cliente.');
     }
   },
 

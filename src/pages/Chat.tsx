@@ -32,6 +32,7 @@ export default function Chat({ clientId }: ChatProps) {
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [client, setClient] = useState<any>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -55,35 +56,51 @@ export default function Chat({ clientId }: ChatProps) {
     fetchData();
   }, [conversationId]);
 
-  const calculateMessageCost = (content: string): number => {
-    const costPerCharacter = 0.01;
-    return parseFloat((content.length * costPerCharacter).toFixed(2));
+  const calculateMessageCost = (content: string, priority: 'normal' | 'urgent'): number => {
+    const baseCost = priority === 'normal' ? 0.25 : 0.50;
+    return parseFloat(baseCost.toFixed(2));
   };
 
-  const handleSendMessage = async (content: string) => {
+  const handleSendMessage = async (content: string, priority: 'normal' | 'urgent' = 'normal') => {
     if (!content.trim()) return;
 
-    const newMessage: {
-      conversationId: string;
-      senderId: string;
-      recipientId: string;
-      content: string;
-      timestamp: string;
-      priority: 'normal' | 'urgent';
-      status: 'queued' | 'processing' | 'sent' | 'delivered' | 'read' | 'failed';
-      cost: number;
-    } = {
-      conversationId: conversationId!,
-      senderId: clientId,
-      recipientId: conversation?.recipientId || '',
-      content,
-      timestamp: new Date().toISOString(),
-      priority: 'normal',
-      status: 'queued',
-      cost: calculateMessageCost(content),
-    };
+    const cost = calculateMessageCost(content, priority);
 
     try {
+      const clientData = await chatService.fetchClientById(clientId);
+      const { balance, limit, planType } = clientData;
+
+      const isPrepaid = planType === 'prepaid';
+      const isBalanceSufficient = isPrepaid && balance >= cost;
+      const isLimitSufficient = !isPrepaid && limit >= cost;
+
+      if (!isBalanceSufficient && !isLimitSufficient) {
+        setError('Saldo ou limite insuficiente para enviar a mensagem.');
+        return;
+      }
+
+      const updatedClient = isPrepaid
+        ? { balance: balance - cost }
+        : { limit: limit - cost };
+
+      await chatService.updateClient(clientId, updatedClient);
+
+      setClient((prevClient: any) => ({
+        ...prevClient!,
+        ...updatedClient,
+      }));
+
+      const newMessage = {
+        conversationId: conversationId!,
+        senderId: clientId,
+        recipientId: conversation?.recipientId || '',
+        content,
+        timestamp: new Date().toISOString(),
+        priority,
+        status: 'queued' as 'queued',
+        cost,
+      };
+
       const createdMessage = await chatService.sendMessage(newMessage);
       setMessages((prevMessages) => [...prevMessages, createdMessage]);
 
@@ -99,10 +116,11 @@ export default function Chat({ clientId }: ChatProps) {
         lastMessageTime: newMessage.timestamp,
       }));
     } catch (err: any) {
-      console.error('Erro ao enviar mensagem ou atualizar conversa:', err);
+      console.error('Erro ao enviar mensagem ou atualizar cliente:', err);
       setError('Erro ao enviar mensagem. Tente novamente.');
     }
   };
+
   if (loading) return <div className="text-center py-8">Carregando...</div>;
   if (error) return <div className="text-red-500 text-center py-8">{error}</div>;
 
