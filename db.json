@@ -1,131 +1,110 @@
 {
   "clients": [
     {
-      "id": "101",
-      "name": "Maria Silva",
-      "documentId": "12345678900",
-      "documentType": "CPF",
+      "id": "client123",
+      "name": "Empresa ABC Ltda",
+      "documentId": "12345678000199",
+      "documentType": "CNPJ",
       "planType": "prepaid",
-      "balance": 50,
+      "balance": 100.00,
+      "limit": 0,
       "active": true
     },
     {
-      "id": "102",
-      "name": "João Santos",
-      "documentId": "09912899901",
+      "id": "client456",
+      "name": "Empresa XYZ Ltda",
+      "documentId": "98765432000188",
       "documentType": "CNPJ",
       "planType": "postpaid",
-      "limit": 200,
-      "active": true
-    },
-    {
-      "id": "client-1746901670268",
-      "name": "Joao Empresa",
-      "documentId": "99908310178",
-      "documentType": "CNPJ",
-      "planType": "prepaid",
-      "balance": 250,
+      "balance": 0,
+      "limit": 500.00,
       "active": true
     }
   ],
   "conversations": [
     {
-      "id": "1",
-      "recipientId": "101",
+      "id": "conv123",
+      "clientId": "client123",
+      "recipientId": "user001",
       "recipientName": "Maria Silva",
-      "lastMessageContent": "Olá, como posso ajudar?",
-      "lastMessageTime": "2025-05-10T10:00:00Z",
-      "unreadCount": 2
+      "lastMessageContent": "Olá, como vai?",
+      "lastMessageTime": "2023-07-15T10:30:00Z",
+      "unreadCount": 1
     },
     {
-      "id": "2",
-      "recipientId": "102",
-      "recipientName": "João Santos",
+      "id": "conv456",
+      "clientId": "client123",
+      "recipientId": "user002",
+      "recipientName": "Carlos Pereira",
       "lastMessageContent": "Obrigado pela ajuda!",
-      "lastMessageTime": "2025-05-10T09:30:00Z",
+      "lastMessageTime": "2023-07-15T11:00:00Z",
       "unreadCount": 0
     },
     {
-      "id": "3",
-      "recipientId": "101",
-      "recipientName": "Maria Silva",
-      "lastMessageContent": "Você pode me ajudar com a fatura?",
-      "lastMessageTime": "2025-05-10T11:00:00Z",
-      "unreadCount": 1
+      "id": "conv789",
+      "clientId": "client456",
+      "recipientId": "user003",
+      "recipientName": "Ana Costa",
+      "lastMessageContent": "Preciso de mais informações sobre o plano.",
+      "lastMessageTime": "2023-07-15T12:00:00Z",
+      "unreadCount": 2
     }
   ],
   "messages": [
     {
-      "id": "1",
-      "conversationId": "1",
-      "content": "Olá, como posso ajudar?",
-      "sentBy": {
-        "id": "101",
-        "type": "user"
-      },
-      "timestamp": "2025-05-10T10:00:00Z",
+      "id": "msg001",
+      "conversationId": "conv123",
+      "senderId": "client123",
+      "recipientId": "user001",
+      "content": "Olá, como vai?",
+      "timestamp": "2023-07-15T10:30:00Z",
       "priority": "normal",
-      "status": "delivered"
+      "status": "delivered",
+      "cost": 0.25
     },
     {
-      "id": "2",
-      "conversationId": "1",
-      "content": "Preciso de ajuda com meu plano.",
-      "sentBy": {
-        "id": "101",
-        "type": "client"
-      },
-      "timestamp": "2025-05-10T10:01:00Z",
-      "priority": "urgent",
-      "status": "read"
+      "id": "msg002",
+      "conversationId": "conv123",
+      "senderId": "user001",
+      "recipientId": "client123",
+      "content": "Tudo bem, e você?",
+      "timestamp": "2023-07-15T10:31:00Z",
+      "priority": "normal",
+      "status": "read",
+      "cost": 0.25
     },
     {
-      "id": "3",
-      "conversationId": "2",
+      "id": "msg003",
+      "conversationId": "conv456",
+      "senderId": "client123",
+      "recipientId": "user002",
       "content": "Obrigado pela ajuda!",
-      "sentBy": {
-        "id": "102",
-        "type": "client"
-      },
-      "timestamp": "2025-05-10T09:30:00Z",
+      "timestamp": "2023-07-15T11:00:00Z",
       "priority": "normal",
-      "status": "delivered"
+      "status": "delivered",
+      "cost": 0.25
     },
     {
-      "id": "4",
-      "conversationId": "3",
-      "content": "Você pode me ajudar com a fatura?",
-      "sentBy": {
-        "id": "101",
-        "type": "client"
-      },
-      "timestamp": "2025-05-10T11:00:00Z",
+      "id": "msg004",
+      "conversationId": "conv789",
+      "senderId": "user003",
+      "recipientId": "client456",
+      "content": "Preciso de mais informações sobre o plano.",
+      "timestamp": "2023-07-15T12:00:00Z",
       "priority": "urgent",
-      "status": "queued"
+      "status": "queued",
+      "cost": 0.50
     },
     {
-      "id": "5",
-      "conversationId": "3",
-      "content": "Claro, vou verificar isso para você.",
-      "sentBy": {
-        "id": "101",
-        "type": "user"
-      },
-      "timestamp": "2025-05-10T11:05:00Z",
+      "id": "msg005",
+      "conversationId": "conv789",
+      "senderId": "client456",
+      "recipientId": "user003",
+      "content": "Claro, vou verificar e já te retorno.",
+      "timestamp": "2023-07-15T12:05:00Z",
       "priority": "normal",
-      "status": "processing"
-    },
-    {
-      "id": "3",
-      "content": "teste",
-      "sentBy": {
-        "id": "user-id",
-        "type": "user"
-      },
-      "timestamp": "2025-05-10T20:37:18.799Z",
-      "priority": "normal",
-      "status": "sent",
-      "conversationId": "3"
+      "status": "processing",
+      "cost": 0.25
     }
   ]
 }

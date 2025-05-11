@@ -7,8 +7,10 @@ import ChatWindow from '../components/ChatWindow';
 
 interface Message {
   id: string;
+  conversationId: string;
+  senderId: string;
+  recipientId: string;
   content: string;
-  sentBy: { id: string; type: 'client' | 'user' };
   timestamp: string;
   priority: 'normal' | 'urgent';
   status: 'queued' | 'processing' | 'sent' | 'delivered' | 'read' | 'failed';
@@ -19,8 +21,12 @@ interface Conversation {
   recipientName: string;
 }
 
-export default function Chat() {
-  const { id } = useParams<{ id: string }>();
+interface ChatProps {
+  clientId: string;
+}
+
+export default function Chat({ clientId }: ChatProps) {
+  const { id: conversationId } = useParams<{ id: string }>();
   const [messages, setMessages] = useState<Message[]>([]);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [loading, setLoading] = useState(true);
@@ -29,36 +35,35 @@ export default function Chat() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const convData = await chatService.fetchConversationById(id!);
+        const convData = await chatService.fetchConversationById(conversationId!);
         setConversation(convData);
 
-        const msgData = await chatService.fetchMessagesByConversationId(id!);
+        const msgData = await chatService.fetchMessagesByConversationId(conversationId!);
         setMessages(msgData);
       } catch (err: any) {
-        setError(err.message);
+        setError('Erro ao carregar dados da conversa. Tente novamente mais tarde.');
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [id]);
+  }, [conversationId]);
 
   const handleSendMessage = async (content: string) => {
     const newMessage: Message = {
-      id: (messages.length + 1).toString(),
+      id: '',
+      conversationId: conversationId!,
+      senderId: clientId,
+      recipientId: conversation?.id || '',
       content,
-      sentBy: { id: 'user-id', type: 'user' },
       timestamp: new Date().toISOString(),
       priority: 'normal',
-      status: 'sent',
+      status: 'queued',
     };
 
     try {
-      const createdMessage = await chatService.sendMessage({
-        ...newMessage,
-        conversationId: id,
-      });
+      const createdMessage = await chatService.sendMessage(newMessage);
 
       setMessages((prevMessages) => [...prevMessages, createdMessage]);
     } catch (err: any) {
@@ -86,7 +91,7 @@ export default function Chat() {
       </div>
 
       <ChatWindow
-        conversationId={id!}
+        clientId={clientId}
         messages={messages}
         onSendMessage={handleSendMessage}
       />

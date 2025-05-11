@@ -16,24 +16,12 @@ interface Client {
 
 interface Conversation {
   id: string;
+  clientId: string;
   recipientId: string;
   recipientName: string;
   lastMessageContent: string;
   lastMessageTime: string;
   unreadCount: number;
-}
-
-interface Message {
-  id: string;
-  conversationId: string;
-  content: string;
-  sentBy: {
-    id: string;
-    type: 'client' | 'user';
-  };
-  timestamp: string;
-  priority: 'normal' | 'urgent';
-  status: 'queued' | 'processing' | 'sent' | 'delivered' | 'read' | 'failed';
 }
 
 type ConversationsProps = {
@@ -48,27 +36,23 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
   const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchConversations = async () => {
       if (!client) return;
 
       try {
-        const convData = await chatService.fetchConversations();
-
-        const filteredConversations = convData.filter(
-          (conv: Conversation) => conv.recipientId === client.id
-        );
-        setConversations(filteredConversations);
+        const convData = await chatService.fetchConversationsByClientId(client.id);
+        setConversations(convData);
       } catch (err: any) {
-        setError(err.message);
+        setError('Erro ao carregar conversas. Tente novamente mais tarde.');
       } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    fetchConversations();
   }, [client]);
 
-  const filteredConversations = conversations.filter(conv =>
+  const filteredConversations = conversations.filter((conv) =>
     conv.recipientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
     conv.lastMessageContent.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -86,7 +70,8 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
   return (
     <div className="max-w-2xl mx-auto my-8 bg-white rounded-xl shadow-lg overflow-hidden">
       <div className="p-6 border-b border-gray-100 flex justify-between items-center bg-gray-50">
-        <h2 className="font-bold text-2xl text-gray-800">Minhas Conversas</h2>
+        <h2 className="font-bold text-2xl text-gray-800">{client?.name}</h2>
+        <span className="text-sm text-gray-500">{getBalanceDisplay()}</span>
         <button
           onClick={onLogout}
           className="bg-red-500 text-white px-4 py-2 rounded-full text-sm font-semibold shadow-sm hover:bg-red-600 transition-colors"
@@ -113,9 +98,11 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
             className="block p-6 hover:bg-gray-50 transition-colors duration-200"
             onClick={() => {
               if (conversation.unreadCount > 0) {
-                setConversations(convs => convs.map(c =>
-                  c.id === conversation.id ? { ...c, unreadCount: 0 } : c
-                ));
+                setConversations((prevConvs) =>
+                  prevConvs.map((c) =>
+                    c.id === conversation.id ? { ...c, unreadCount: 0 } : c
+                  )
+                );
               }
             }}
           >
@@ -138,7 +125,7 @@ export default function Conversations({ client, onLogout }: ConversationsProps) 
               <span className="text-sm text-gray-500 whitespace-nowrap ml-4">
                 {new Date(conversation.lastMessageTime).toLocaleTimeString([], {
                   hour: '2-digit',
-                  minute: '2-digit'
+                  minute: '2-digit',
                 })}
               </span>
             </div>

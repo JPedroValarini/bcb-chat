@@ -24,8 +24,12 @@ const App: React.FC = () => {
   }, []);
 
   const handleLogin = (loggedInClient: Client) => {
-    localStorage.setItem('loggedClient', JSON.stringify(loggedInClient));
-    setClient(loggedInClient);
+    if (loggedInClient.active) {
+      localStorage.setItem('loggedClient', JSON.stringify(loggedInClient));
+      setClient(loggedInClient);
+    } else {
+      alert('Cliente inativo. Entre em contato com o suporte.');
+    }
   };
 
   const handleLogout = () => {
@@ -49,7 +53,7 @@ const App: React.FC = () => {
         <Route
           path="/conversations"
           element={
-            client ? (
+            client && client.active ? (
               <Conversations client={client} onLogout={handleLogout} />
             ) : (
               <Navigate to="/" replace />
@@ -59,8 +63,8 @@ const App: React.FC = () => {
         <Route
           path="/chat/:id"
           element={
-            client ? (
-              <Chat />
+            client && client.active ? (
+              <Chat clientId={client.id} />
             ) : (
               <Navigate to="/" replace />
             )

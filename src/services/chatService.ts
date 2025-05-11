@@ -1,13 +1,18 @@
-const ApiConversation = 'http://localhost:3001/conversations';
-const ApiMessage = 'http://localhost:3001/messages';
+const ApiUrl = 'http://localhost:3001/conversations';
 
 export const chatService = {
-  async fetchConversations() {
+  /**
+   * Busca todas as conversas de um cliente pelo clientId.
+   * @param clientId - ID do cliente.
+   * @returns Lista de conversas do cliente.
+   */
+  async fetchConversationsByClientId(clientId: string) {
     try {
-      const response = await fetch(ApiConversation);
+      const response = await fetch(`${ApiUrl}?clientId=${clientId}`);
       if (!response.ok) {
-        throw new Error('Erro ao carregar conversas.');
+        throw new Error('Erro ao buscar conversas.');
       }
+
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar conversas:', error);
@@ -15,25 +20,39 @@ export const chatService = {
     }
   },
 
+
+  /**
+  * Busca uma conversa pelo ID.
+  * @param conversationId - ID da conversa.
+  * @returns Dados da conversa.
+  */
   async fetchConversationById(conversationId: string) {
     try {
-      const response = await fetch(`${ApiConversation}/${conversationId}`);
+      const response = await fetch(`${ApiUrl}/${conversationId}`); // Corrigido para evitar duplicação
       if (!response.ok) {
-        throw new Error('Conversa não encontrada.');
+        throw new Error('Erro ao buscar conversa.');
       }
+
       return await response.json();
     } catch (error) {
-      console.error('Erro ao buscar conversa por ID:', error);
-      throw new Error('Erro ao buscar conversa por ID.');
+      console.error('Erro ao buscar conversa:', error);
+      throw new Error('Erro ao buscar conversa.');
     }
   },
 
+  /**
+   * Busca todas as mensagens de uma conversa pelo ID.
+   * @param conversationId - ID da conversa.
+   * @returns Lista de mensagens da conversa.
+   */
   async fetchMessagesByConversationId(conversationId: string) {
     try {
-      const response = await fetch(`${ApiMessage}?conversationId=${conversationId}&_sort=timestamp&_order=asc`);
+      // Busca todas as mensagens e filtra pelo conversationId
+      const response = await fetch(`http://localhost:3001/messages?conversationId=${conversationId}`);
       if (!response.ok) {
-        throw new Error('Erro ao carregar mensagens.');
+        throw new Error('Erro ao buscar mensagens.');
       }
+
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar mensagens:', error);
@@ -41,33 +60,23 @@ export const chatService = {
     }
   },
 
-  async createConversation(newConversation: any) {
+  /**
+   * Envia uma nova mensagem.
+   * @param message - Dados da mensagem a ser enviada.
+   * @returns Mensagem criada.
+   */
+  async sendMessage(message: any) {
     try {
-      const response = await fetch(ApiConversation, {
+      const response = await fetch(`${ApiUrl}/messages`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newConversation),
+        body: JSON.stringify(message),
       });
-      if (!response.ok) {
-        throw new Error('Erro ao criar conversa.');
-      }
-      return await response.json();
-    } catch (error) {
-      console.error('Erro ao criar conversa:', error);
-      throw new Error('Erro ao criar conversa.');
-    }
-  },
 
-  async sendMessage(newMessage: any) {
-    try {
-      const response = await fetch(ApiMessage, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newMessage),
-      });
       if (!response.ok) {
         throw new Error('Erro ao enviar mensagem.');
       }
+
       return await response.json();
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
