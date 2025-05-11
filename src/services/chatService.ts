@@ -1,18 +1,13 @@
-const ApiUrl = 'http://localhost:3001/conversations';
+const apiConversations = 'http://localhost:3001/conversations';
+const apiMessages = 'http://localhost:3001/messages';
 
 export const chatService = {
-  /**
-   * Busca todas as conversas de um cliente pelo clientId.
-   * @param clientId - ID do cliente.
-   * @returns Lista de conversas do cliente.
-   */
   async fetchConversationsByClientId(clientId: string) {
     try {
-      const response = await fetch(`${ApiUrl}?clientId=${clientId}`);
+      const response = await fetch(`${apiConversations}?clientId=${clientId}`);
       if (!response.ok) {
         throw new Error('Erro ao buscar conversas.');
       }
-
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar conversas:', error);
@@ -20,19 +15,12 @@ export const chatService = {
     }
   },
 
-
-  /**
-  * Busca uma conversa pelo ID.
-  * @param conversationId - ID da conversa.
-  * @returns Dados da conversa.
-  */
   async fetchConversationById(conversationId: string) {
     try {
-      const response = await fetch(`${ApiUrl}/${conversationId}`); // Corrigido para evitar duplicação
+      const response = await fetch(`${apiConversations}/${conversationId}`);
       if (!response.ok) {
         throw new Error('Erro ao buscar conversa.');
       }
-
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar conversa:', error);
@@ -40,19 +28,12 @@ export const chatService = {
     }
   },
 
-  /**
-   * Busca todas as mensagens de uma conversa pelo ID.
-   * @param conversationId - ID da conversa.
-   * @returns Lista de mensagens da conversa.
-   */
   async fetchMessagesByConversationId(conversationId: string) {
     try {
-      // Busca todas as mensagens e filtra pelo conversationId
-      const response = await fetch(`http://localhost:3001/messages?conversationId=${conversationId}`);
+      const response = await fetch(`${apiMessages}?conversationId=${conversationId}`);
       if (!response.ok) {
         throw new Error('Erro ao buscar mensagens.');
       }
-
       return await response.json();
     } catch (error) {
       console.error('Erro ao buscar mensagens:', error);
@@ -60,27 +41,64 @@ export const chatService = {
     }
   },
 
-  /**
-   * Envia uma nova mensagem.
-   * @param message - Dados da mensagem a ser enviada.
-   * @returns Mensagem criada.
-   */
-  async sendMessage(message: any) {
+  async updateUnreadCount(conversationId: string, unreadCount: number) {
     try {
-      const response = await fetch(`${ApiUrl}/messages`, {
+      const response = await fetch(`${apiConversations}/${conversationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ unreadCount }),
+      });
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar unreadCount.');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao atualizar unreadCount:', error);
+      throw new Error('Erro ao atualizar unreadCount.');
+    }
+  },
+
+  async updateLastMessage(conversationId: string, lastMessageContent: string, lastMessageTime: string) {
+    try {
+      const response = await fetch(`${apiConversations}/${conversationId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ lastMessageContent, lastMessageTime }),
+      });
+      if (!response.ok) {
+        throw new Error('Erro ao atualizar a última mensagem da conversa.');
+      }
+      return await response.json();
+    } catch (error) {
+      console.error('Erro ao atualizar a última mensagem da conversa:', error);
+      throw new Error('Erro ao atualizar a última mensagem da conversa.');
+    }
+  },
+
+  async sendMessage(message: {
+    conversationId: string;
+    senderId: string;
+    recipientId: string;
+    content: string;
+    timestamp: string;
+    priority: 'normal' | 'urgent';
+    status: 'queued' | 'processing' | 'sent' | 'delivered' | 'read' | 'failed';
+    cost: number;
+  }) {
+    try {
+      const response = await fetch(apiMessages, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(message),
       });
-
       if (!response.ok) {
-        throw new Error('Erro ao enviar mensagem.');
+        const errorDetails = await response.text();
+        throw new Error(`Erro ao enviar mensagem: ${errorDetails}`);
       }
-
       return await response.json();
     } catch (error) {
       console.error('Erro ao enviar mensagem:', error);
-      throw new Error('Erro ao enviar mensagem.');
+      throw new Error('Erro ao enviar mensagem. Verifique os dados e tente novamente.');
     }
   },
 };

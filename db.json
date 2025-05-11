@@ -6,7 +6,7 @@
       "documentId": "12345678000199",
       "documentType": "CNPJ",
       "planType": "prepaid",
-      "balance": 100.00,
+      "balance": 100,
       "limit": 0,
       "active": true
     },
@@ -17,7 +17,17 @@
       "documentType": "CNPJ",
       "planType": "postpaid",
       "balance": 0,
-      "limit": 500.00,
+      "limit": 500,
+      "active": true
+    },
+    {
+      "id": "client789",
+      "name": "João da Silva",
+      "documentId": "12345678901",
+      "documentType": "CPF",
+      "planType": "prepaid",
+      "balance": 50,
+      "limit": 0,
       "active": true
     }
   ],
@@ -27,17 +37,17 @@
       "clientId": "client123",
       "recipientId": "user001",
       "recipientName": "Maria Silva",
-      "lastMessageContent": "Olá, como vai?",
-      "lastMessageTime": "2023-07-15T10:30:00Z",
-      "unreadCount": 1
+      "lastMessageContent": "tudo também !",
+      "lastMessageTime": "2025-05-11T07:07:54.281Z",
+      "unreadCount": 0
     },
     {
       "id": "conv456",
       "clientId": "client123",
       "recipientId": "user002",
       "recipientName": "Carlos Pereira",
-      "lastMessageContent": "Obrigado pela ajuda!",
-      "lastMessageTime": "2023-07-15T11:00:00Z",
+      "lastMessageContent": "teste",
+      "lastMessageTime": "2025-05-11T07:00:14.845Z",
       "unreadCount": 0
     },
     {
@@ -45,9 +55,36 @@
       "clientId": "client456",
       "recipientId": "user003",
       "recipientName": "Ana Costa",
-      "lastMessageContent": "Preciso de mais informações sobre o plano.",
-      "lastMessageTime": "2023-07-15T12:00:00Z",
-      "unreadCount": 2
+      "lastMessageContent": "",
+      "lastMessageTime": "",
+      "unreadCount": 0
+    },
+    {
+      "id": "conv987",
+      "clientId": "client456",
+      "recipientId": "user004",
+      "recipientName": "Joao Teste",
+      "lastMessageContent": "primeira mensagem",
+      "lastMessageTime": "2025-05-11T06:56:36.250Z",
+      "unreadCount": 0
+    },
+    {
+      "id": "conv999",
+      "clientId": "client789",
+      "recipientId": "user005",
+      "recipientName": "Mariana Oliveira",
+      "lastMessageContent": "teste",
+      "lastMessageTime": "2025-05-11T06:52:09.701Z",
+      "unreadCount": 0
+    },
+    {
+      "id": "conv1000",
+      "clientId": "client789",
+      "recipientId": "user006",
+      "recipientName": "Pedro Santos",
+      "lastMessageContent": "agora",
+      "lastMessageTime": "2025-05-11T06:52:34.585Z",
+      "unreadCount": 0
     }
   ],
   "messages": [
@@ -75,36 +112,102 @@
     },
     {
       "id": "msg003",
-      "conversationId": "conv456",
-      "senderId": "client123",
-      "recipientId": "user002",
-      "content": "Obrigado pela ajuda!",
-      "timestamp": "2023-07-15T11:00:00Z",
+      "conversationId": "conv999",
+      "senderId": "client789",
+      "recipientId": "user005",
+      "content": "Olá, tudo bem?",
+      "timestamp": "2025-05-11T07:00:00.000Z",
       "priority": "normal",
-      "status": "delivered",
-      "cost": 0.25
+      "status": "read",
+      "cost": 0.15
     },
     {
       "id": "msg004",
-      "conversationId": "conv789",
-      "senderId": "user003",
-      "recipientId": "client456",
-      "content": "Preciso de mais informações sobre o plano.",
-      "timestamp": "2023-07-15T12:00:00Z",
-      "priority": "urgent",
-      "status": "queued",
-      "cost": 0.50
+      "conversationId": "conv999",
+      "senderId": "user005",
+      "recipientId": "client789",
+      "content": "Tudo ótimo, e você?",
+      "timestamp": "2025-05-11T07:01:00.000Z",
+      "priority": "normal",
+      "status": "read",
+      "cost": 0.15
     },
     {
       "id": "msg005",
-      "conversationId": "conv789",
-      "senderId": "client456",
-      "recipientId": "user003",
-      "content": "Claro, vou verificar e já te retorno.",
-      "timestamp": "2023-07-15T12:05:00Z",
+      "conversationId": "conv1000",
+      "senderId": "client789",
+      "recipientId": "user006",
+      "content": "Obrigado pela ajuda!",
+      "timestamp": "2025-05-11T07:15:00.000Z",
       "priority": "normal",
-      "status": "processing",
-      "cost": 0.25
+      "status": "delivered",
+      "cost": 0.2
+    },
+    {
+      "id": "msg006",
+      "conversationId": "conv1000",
+      "senderId": "user006",
+      "recipientId": "client789",
+      "content": "De nada, qualquer coisa estou à disposição.",
+      "timestamp": "2025-05-11T07:16:00.000Z",
+      "priority": "normal",
+      "status": "read",
+      "cost": 0.2
+    },
+    {
+      "id": "1337",
+      "conversationId": "conv999",
+      "senderId": "client789",
+      "recipientId": "user005",
+      "content": "teste",
+      "timestamp": "2025-05-11T06:52:09.701Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.05
+    },
+    {
+      "id": "6df9",
+      "conversationId": "conv1000",
+      "senderId": "client789",
+      "recipientId": "user006",
+      "content": "agora",
+      "timestamp": "2025-05-11T06:52:34.585Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.05
+    },
+    {
+      "id": "5c00",
+      "conversationId": "conv987",
+      "senderId": "client456",
+      "recipientId": "user004",
+      "content": "primeira mensagem",
+      "timestamp": "2025-05-11T06:56:36.250Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.17
+    },
+    {
+      "id": "ce88",
+      "conversationId": "conv456",
+      "senderId": "client123",
+      "recipientId": "user002",
+      "content": "teste",
+      "timestamp": "2025-05-11T07:00:14.845Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.05
+    },
+    {
+      "id": "9985",
+      "conversationId": "conv123",
+      "senderId": "client123",
+      "recipientId": "user001",
+      "content": "tudo também !",
+      "timestamp": "2025-05-11T07:07:54.281Z",
+      "priority": "normal",
+      "status": "queued",
+      "cost": 0.13
     }
   ]
 }

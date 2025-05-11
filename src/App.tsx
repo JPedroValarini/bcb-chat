@@ -54,7 +54,7 @@ const App: React.FC = () => {
           path="/conversations"
           element={
             client && client.active ? (
-              <Conversations client={client} onLogout={handleLogout} />
+              <Conversations client={client} onLogout={handleLogout} conversations={[]} />
             ) : (
               <Navigate to="/" replace />
             )
