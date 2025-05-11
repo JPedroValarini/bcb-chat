@@ -1,0 +1,29 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    depends_on:
+      - json-server
+    networks:
+      - bcb-chat-network
+
+  json-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run api
+    volumes:
+      - ./db.json:/app/db.json
+    ports:
+      - "3001:3001"
+    networks:
+      - bcb-chat-network
+
+networks:
+  bcb-chat-network:
+    driver: bridge
